@@ -137,6 +137,7 @@ Create three compute instances which will host the Kubernetes control plane in `
 az vm availability-set create -g kubernetes -n controller-as
 ```
 
+Bash
 ```shell
 for i in 0 1 2; do
     echo "[Controller ${i}] Creating public IP..."
@@ -163,6 +164,34 @@ for i in 0 1 2; do
         --nsg '' \
         --admin-username 'kuberoot' > /dev/null
 done
+```
+PowerShell
+```posh
+for ($i=0; $i -le 2; $i++)
+{
+  echo "[Controller ${i}] Creating public IP..."
+  az network public-ip create -n controller-${i}-pip -g kubernetes
+
+  echo "[Controller ${i}] Creating NIC..."
+  az network nic create -g kubernetes \ 
+    -n controller-${i}-nic \
+    --private-ip-address 10.240.0.1${i} \
+    --public-ip-address controller-${i}-pip \
+    --vnet kubernetes-vnet \
+    --subnet kubernetes-subnet \
+    --ip-forwarding \
+    --lb-name kubernetes-lb \
+    --lb-address-pools kubernetes-lb-pool
+
+  echo "[Controller ${i}] Creating VM..."
+  az vm create -g kubernetes \
+    -n controller-${i} \
+    --image ${UBUNTULTS} \
+    --generate-ssh-keys \
+    --nics controller-${i}-nic \
+    --availability-set controller-as \
+    --admin-username 'kuberoot'
+}
 ```
 
 ### Kubernetes Workers
