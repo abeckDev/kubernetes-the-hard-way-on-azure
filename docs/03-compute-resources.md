@@ -141,7 +141,7 @@ Bash
 ```shell
 for i in 0 1 2; do
     echo "[Controller ${i}] Creating public IP..."
-    az network public-ip create -n controller-${i}-pip -g kubernetes > /dev/null
+    az network public-ip create -n controller-${i}-pip -g kubernetes --allocation-method Static > /dev/null
 
     echo "[Controller ${i}] Creating NIC..."
     az network nic create -g kubernetes \
@@ -170,7 +170,7 @@ PowerShell
 for ($i=0; $i -le 2; $i++)
 {
   echo "[Controller ${i}] Creating public IP..."
-  az network public-ip create -n controller-${i}-pip -g kubernetes
+  az network public-ip create -n controller-${i}-pip -g kubernetes --allocation-method Static
 
   echo "[Controller ${i}] Creating NIC..."
   az network nic create -g kubernetes \ 
