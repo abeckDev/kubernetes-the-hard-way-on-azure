@@ -46,6 +46,23 @@ for instance in worker-0 worker-1 worker-2; do
 done
 ```
 
+Powershell
+```posh
+$KUBERNETES_PUBLIC_ADDRESS=az network public-ip show -g kubernetes -n kubernetes-pip --query "ipAddress" -otsv
+
+for ($i=0; $i -le 2;$i++)
+{
+    $instance="worker-$i"
+    kubectl config set-cluster kubernetes-the-hard-way --certificate-authority=ca.pem --embed-certs=true --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 --kubeconfig=${instance}.kubeconfig
+
+    kubectl config set-credentials system:node:${instance} --client-certificate=${instance}.pem --client-key=${instance}-key.pem --embed-certs=true --kubeconfig=${instance}.kubeconfig
+
+    kubectl config set-context default --cluster=kubernetes-the-hard-way --user=system:node:${instance} --kubeconfig=${instance}.kubeconfig
+
+    kubectl config use-context default --kubeconfig=${instance}.kubeconfig
+}
+```
+
 Results:
 
 ```shell
