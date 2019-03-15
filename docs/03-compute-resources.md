@@ -209,7 +209,7 @@ Bash
 ```shell
 for i in 0 1 2; do
     echo "[Worker ${i}] Creating public IP..."
-    az network public-ip create -n worker-${i}-pip -g kubernetes > /dev/null
+    az network public-ip create -n worker-${i}-pip -g kubernetes --allocation-method Static > /dev/null
 
     echo "[Worker ${i}] Creating NIC..."
     az network nic create -g kubernetes \
@@ -236,7 +236,7 @@ PowerShell
 for ($i=0; $i -le 2; $i++)
 {
     echo "[Worker ${i}] Creating public IP..."
-    az network public-ip create -n worker-${i}-pip -g kubernetes
+    az network public-ip create -n worker-${i}-pip -g kubernetes --allocation-method Static
 
     echo "[Worker ${i}] Creating NIC..."
     az network nic create -g kubernetes \
