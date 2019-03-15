@@ -227,7 +227,6 @@ for i in 0 1 2; do
         --nics worker-${i}-nic \
         --tags pod-cidr=10.200.${i}.0/24 \
         --availability-set worker-as \
-        --nsg '' \
         --admin-username 'kuberoot' > /dev/null
 done
 ```
